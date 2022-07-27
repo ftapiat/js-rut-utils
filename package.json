@@ -61,7 +61,6 @@
   },
   "homepage": "https://github.com/ftapiat/js-rut-utils#readme",
   "directories": {
-    "doc": "doc",
     "lib": "lib"
   }
 }
