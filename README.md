@@ -155,7 +155,7 @@ isRutValidInModule11(19101178, '4'); // ❌ false
 ## Instalación
 
 ```bash
-npm install --save @ftapia/js-rut-utils
+npm install --save @ftapiat/js-rut-utils
 ```
 
 ## Testing
