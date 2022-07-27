@@ -1,7 +1,7 @@
 {
-  "name": "@ftapiat/ts-library-template",
-  "version": "1.0.0",
-  "description": "Plantilla para desarrollar paquetes de Javascript usando Typescript",
+  "name": "@ftapiat/js-rut-utils",
+  "version": "0.1.0",
+  "description": "Permite validar, limpiar y formatear RUT chilenos en Javascript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -16,14 +16,19 @@
     "postversion": "git push && git push --tags"
   },
   "keywords": [
-    "Cambiar",
-    "Por",
-    "Palabras Clave",
-    "Para indexar"
+    "rut",
+    "RUT",
+    "Chile",
+    "validar",
+    "modulo11",
+    "limpiar",
+    "generar",
+    "formatear",
+    "typescript"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ftapiat/ts-library-template.git"
+    "url": "git+https://github.com/ftapiat/js-rut-utils.git"
   },
   "author": "ftapiat",
   "license": "MIT",
@@ -53,9 +58,9 @@
     "lib/**/*"
   ],
   "bugs": {
-    "url": "https://github.com/ftapiat/ts-library-template/issues"
+    "url": "https://github.com/ftapiat/js-rut-utils/issues"
   },
-  "homepage": "https://github.com/ftapiat/ts-library-template#readme",
+  "homepage": "https://github.com/ftapiat/js-rut-utils#readme",
   "directories": {
     "doc": "doc",
     "lib": "lib"
