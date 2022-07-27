@@ -1,45 +1,166 @@
-# Paquetes NPM
+# JS Rut Utils
 
-Debes tener instalado **npm** y luego ejecutar el comando `npm install`.
+Librería para generar, validar, limpiar y dar formato a RUT chilenos.
 
-Esto instalará: 
-- Jest
-- EsLint
-- Prettier
-- Typescript
+## Contenido
 
-# EsLint
+- [Cómo Usarlo](#cómo-usarlo)
+  - [`RutModel`](#rutmodel)
+    - [Propiedades de RutModel](#propiedades-de-rutmodel)
+    - [Crear RutModel](#crear-rutmodel)
+    - [RUT erróneos](#RUT-erróneos)
+  - [Funciones `Utils`](#funciones-utils)
+    - [Limpiar RUT](#limpiar-RUT)
+    - [Formatear RUT](#formatear-RUT)
+    - [Generar RUT aleatorio](#generar-RUT-aleatorio)
+    - [Generar DV a partir del número del RUT](#generar-DV-a-partir-del-número-del-RUT)
+    - [Validación - Regex que comprueba que el RUT tenga puntos y guion y el largo de un RUT](#head-validacion-regex-1)
+    - [Validación - Regex que comprueba que el RUT tenga el largo de un RUT, independientemente de si tiene puntos y guiones](#head-validacion-regex-2)
+    - [Validación - RUT es mayor o igual a 1 millón](#head-validacion-mayor-1-millon)
+    - [Validación - RUT tiene formato correcto, sobre 1 millón y su DV es válido](#head-validacion-completa)
+    - [Validación - DV corresponde al calculado por el módulo 11](#head-validacion-modulo-11)
+- [Instalación](#instalación)
+- [Testing](#testing)
 
-Este proyecto tiene implementado ESLint. Este es una herramienta de linting que se encarga de revisar el código de 
-una forma automática y correcta.
+## Cómo usarlo
 
-Puede que al abrir el proyecto este esté desactivado, por lo que tendrá que activarlo manualmente. Si está usando una 
-herramienta de JetBrains como PHPStorm o WebStorm, puede activarlo en la sección 
-**Languages & Frameworks > Code Quality Tools > ESLint**, seleccionando la opción **Automatic ESLint configuration** 
-de la siguiente forma:
+Dependiendo de lo que quieras hacer, puedes llamar al modelo `RutModel` o directamente llamar las funciones de la 
+carpeta `utils`.
 
-![Captura para implementar EsLint en IntelliJ (PHPStorm)](/doc/capturas/1.EsLinter-IntelliJ.PNG)
+### `RutModel`
 
-# Prettier
+Representa a un RUT validado por su dígito verificador.
 
-Este proyecto cuenta con Prettier, que es una herramienta que se encarga de formatear el código de una forma más bonita. Esto lo realiza
-corrigiendo o agregando espacios, cambiando las comillas dobles por comillas simples (según el contexto), etc.
+#### Propiedades de RutModel
 
-Para asociarlo con el comando de JetBrains para formatear código (**CTRL + ALT + L**), se debe dirigir a
-**Languages & Frameworks > JavaScript > Prettier**, seleccionando la opción **on 'Reformat Code' action** 
-de la siguiente forma:
+Este RUT tiene 4 propiedades:
+1. `number` Número del RUT, requerido en el constructor.
+2. `dv` Dígito verificador, requerido en el constructor.
+3. `formatted` RUT formateado.
+4. `cleaned` RUT sin puntos ni guión.
 
-![Captura para mapear Prettier con el comando de formateo de Código en IntelliJ (PHPStorm)](/doc/capturas/2.Prettier-IntelliJ.PNG)
+#### Crear RutModel
 
-# Pruebas Jest
+- La forma más básica de crear un `RutModel` es definiendo sus número y DV:
+```js
+const rut = new RutModel(19101178, '3');
+```
+- Sin embargo, no siempre se tiene esa información. Por lo que también puedes crear RUT de la siguiente forma: 
+```js
+// 1. Aleatorio:
+const rutAleatorio = RutModel.random();
 
-## Escribir pruebas
+// 2. Desde el número del RUT. Esto generará automáticamente su DV:
+const rutDesdeNumero = RutModel.fromNumber(19101178);
 
-Las pruebas deben estar escritas en la carpeta **src/__tests__**. Estas deben comprobar el funcionamiento correcto de 
-cada clase, función, componente de la aplicación. 
+// 3. Desde el RUT como String. Esto limpiará el RUT y lo asignará
+// automáticamente al modelo:
+const rutDesdeString1 = RutModel.fromString('10.407.355-7'); // ✔ Funciona con puntos y guión.
+const rutDesdeString2 = RutModel.fromString('10407355-7'); // ✔ Funciona sin puntos y con guión.
+const rutDesdeString3 = RutModel.fromString('104073557'); // ✔ Funciona sin puntos ni guión.
+```
 
-La extensión del archivo debe ser **.test.ts**.
+#### RUT erróneos
 
-## Ejecutar pruebas
+**Si se crea un RUT con datos erróneos, se lanzará el error `RutIsMalformedError`**.
 
-Las puedes ejecutar con el comando `npm test`.
+El RUT puede ser erróneo si: 
+- El dígito verificador es inválido.
+```js
+// ❌ Esto daría error
+new RutModel(19101178, '5');
+// ✔ Esto no
+new RutModel(19101178, '3');
+```
+
+- El número es menor a 1 millón.
+```js
+// ❌ Esto daría error
+new RutModel(111111, '6');
+// ✔ Esto no
+new RutModel(1111111, '4');
+```
+
+- El número no puede ser un RUT falso con todos sus caracteres repetidos, como 11.111.111-1, 22.222.222-2, etc.
+```js
+// ❌ Esto daría error
+new RutModel(44444444, '4');
+// ✔ Esto no
+new RutModel(19101178, '3');
+```
+
+### Funciones `utils`
+
+Todas las características de `RutModel` se subdividieron en varias funciones en la carpeta `utils`:
+
+#### Limpiar RUT
+```js
+// Limpia el RUT de puntos y guiones.
+const rut = cleanRut('19.101.178-3'); // '191011783'
+```
+
+#### Formatear RUT
+```js
+// Agrega puntos y guión al RUT
+const rut = formatRut('191011783'); // '19.101.178-3'
+```
+
+#### Generar RUT aleatorio
+```js
+const rut = generateRut(); // Generará un RUT con DV, SIN puntos ni guión.
+const rut = generateRut(true); // Generará un RUT con DV, CON puntos y guión.
+```
+
+#### Generar DV a partir del número del RUT
+```js
+const dv = generateDV(19101178); // '3'
+```
+
+#### <a id="head-validacion-regex-1"><a/>Validación - Regex que comprueba que el RUT tenga puntos y guion y el largo de un RUT
+```js
+rutForcedDotsAndDashRegex.test('19.101.178-3'); // ✔ true
+rutForcedDotsAndDashRegex.test('191011783'); // ❌ false
+rutForcedDotsAndDashRegex.test('19101178-3'); // ❌ false
+rutForcedDotsAndDashRegex.test('abcde'); // ❌ false
+```
+
+#### <a id="head-validacion-regex-2"><a/>Validación - Regex que comprueba que el RUT tenga el largo de un RUT, independientemente de si tiene puntos y guiones
+```js
+rutOptionalDotsAndDashRegex.test('19.101.178-3'); // ✔ true
+rutOptionalDotsAndDashRegex.test('191011783'); // ✔ true
+rutOptionalDotsAndDashRegex.test('19101178-3'); // ✔ true
+rutOptionalDotsAndDashRegex.test('abcde'); // ❌ false
+```
+
+#### <a id="head-validacion-mayor-1-millon"></a>Validación - RUT es mayor o igual a 1 millón
+```js
+isRutNumberOver1Million(1000000); // ✔ true
+isRutNumberOver1Million(11000000); // ✔ true
+isRutNumberOver1Million(999999); // ❌ false
+```
+
+#### <a id="head-validacion-completa"></a>Validación - RUT tiene formato correcto, sobre 1 millón y su DV es válido
+```js
+isRutValid('10407355-7'); // ✔ true : Sin puntos con guión y DV válido.
+isRutValid('19.982-6'); // ❌ false : Número menor a 1 millón.
+isRutValid('44.444.444-4'); // ❌ false : Número repetido.
+```
+
+#### <a id="head-validacion-modulo-11"></a>Validación - DV corresponde al calculado por el módulo 11
+```js
+isRutValidInModule11(19101178, '3'); // ✔ true  
+isRutValidInModule11(19101178, '4'); // ❌ false  
+```
+
+## Instalación
+
+```bash
+npm install --save @ftapia/js-rut-utils
+```
+
+## Testing
+
+```bash
+npm install
+npm test
+```
