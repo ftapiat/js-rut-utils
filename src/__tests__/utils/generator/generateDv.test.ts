@@ -6,4 +6,4 @@ test('Genera DV correcto para RUT de DV numérico', () => {
 
 test('Genera DV correcto para RUT de DV "K"', () => {
   expect(generateDv(7_156_553)).toBe('K');
-})
+});
