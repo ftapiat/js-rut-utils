@@ -1,6 +1,6 @@
 {
   "name": "@ftapiat/js-rut-utils",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Permite validar, limpiar y formatear RUT chilenos en Javascript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

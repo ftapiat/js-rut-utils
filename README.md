@@ -43,10 +43,14 @@ Este RUT tiene 4 propiedades:
 
 - La forma más básica de crear un `RutModel` es definiendo sus número y DV:
 ```js
+import {RutModel} from "@ftapia/js-rut-utils";
+
 const rut = new RutModel(19101178, '3');
 ```
 - Sin embargo, no siempre se tiene esa información. Por lo que también puedes crear RUT de la siguiente forma: 
 ```js
+import {RutModel} from "@ftapia/js-rut-utils";
+
 // 1. Aleatorio:
 const rutAleatorio = RutModel.random();
 
@@ -67,6 +71,8 @@ const rutDesdeString3 = RutModel.fromString('104073557'); // ✔ Funciona sin pu
 El RUT puede ser erróneo si: 
 - El dígito verificador es inválido.
 ```js
+import {RutModel} from "@ftapia/js-rut-utils";
+
 // ❌ Esto daría error
 new RutModel(19101178, '5');
 // ✔ Esto no
@@ -75,6 +81,8 @@ new RutModel(19101178, '3');
 
 - El número es menor a 1 millón.
 ```js
+import {RutModel} from "@ftapia/js-rut-utils";
+
 // ❌ Esto daría error
 new RutModel(111111, '6');
 // ✔ Esto no
@@ -83,6 +91,8 @@ new RutModel(1111111, '4');
 
 - El número no puede ser un RUT falso con todos sus caracteres repetidos, como 11.111.111-1, 22.222.222-2, etc.
 ```js
+import {RutModel} from "@ftapia/js-rut-utils";
+
 // ❌ Esto daría error
 new RutModel(44444444, '4');
 // ✔ Esto no
@@ -95,29 +105,39 @@ Todas las características de `RutModel` se subdividieron en varias funciones en
 
 #### Limpiar RUT
 ```js
+import {cleanRut} from "@ftapia/js-rut-utils";
+
 // Limpia el RUT de puntos y guiones.
 const rut = cleanRut('19.101.178-3'); // '191011783'
 ```
 
 #### Formatear RUT
 ```js
+import {formatRut} from "@ftapia/js-rut-utils";
+
 // Agrega puntos y guión al RUT
 const rut = formatRut('191011783'); // '19.101.178-3'
 ```
 
 #### Generar RUT aleatorio
 ```js
+import {generateRut} from "@ftapia/js-rut-utils";
+
 const rut = generateRut(); // Generará un RUT con DV, SIN puntos ni guión.
 const rut = generateRut(true); // Generará un RUT con DV, CON puntos y guión.
 ```
 
 #### Generar DV a partir del número del RUT
 ```js
+import {generateDV} from "@ftapia/js-rut-utils";
+
 const dv = generateDV(19101178); // '3'
 ```
 
 #### <a id="head-validacion-regex-1"><a/>Validación - Regex que comprueba que el RUT tenga puntos y guion y el largo de un RUT
 ```js
+import {rutForcedDotsAndDashRegex} from "@ftapia/js-rut-utils";
+
 rutForcedDotsAndDashRegex.test('19.101.178-3'); // ✔ true
 rutForcedDotsAndDashRegex.test('191011783'); // ❌ false
 rutForcedDotsAndDashRegex.test('19101178-3'); // ❌ false
@@ -126,6 +146,8 @@ rutForcedDotsAndDashRegex.test('abcde'); // ❌ false
 
 #### <a id="head-validacion-regex-2"><a/>Validación - Regex que comprueba que el RUT tenga el largo de un RUT, independientemente de si tiene puntos y guiones
 ```js
+import {rutOptionalDotsAndDashRegex} from "@ftapia/js-rut-utils";
+
 rutOptionalDotsAndDashRegex.test('19.101.178-3'); // ✔ true
 rutOptionalDotsAndDashRegex.test('191011783'); // ✔ true
 rutOptionalDotsAndDashRegex.test('19101178-3'); // ✔ true
@@ -134,6 +156,8 @@ rutOptionalDotsAndDashRegex.test('abcde'); // ❌ false
 
 #### <a id="head-validacion-mayor-1-millon"></a>Validación - RUT es mayor o igual a 1 millón
 ```js
+import {isRutNumberOver1Million} from "@ftapia/js-rut-utils";
+
 isRutNumberOver1Million(1000000); // ✔ true
 isRutNumberOver1Million(11000000); // ✔ true
 isRutNumberOver1Million(999999); // ❌ false
@@ -141,6 +165,8 @@ isRutNumberOver1Million(999999); // ❌ false
 
 #### <a id="head-validacion-completa"></a>Validación - RUT tiene formato correcto, sobre 1 millón y su DV es válido
 ```js
+import {isRutValid} from "@ftapia/js-rut-utils";
+
 isRutValid('10407355-7'); // ✔ true : Sin puntos con guión y DV válido.
 isRutValid('19.982-6'); // ❌ false : Número menor a 1 millón.
 isRutValid('44.444.444-4'); // ❌ false : Número repetido.
@@ -148,6 +174,8 @@ isRutValid('44.444.444-4'); // ❌ false : Número repetido.
 
 #### <a id="head-validacion-modulo-11"></a>Validación - DV corresponde al calculado por el módulo 11
 ```js
+import {isRutValidInModule11} from "@ftapia/js-rut-utils";
+
 isRutValidInModule11(19101178, '3'); // ✔ true  
 isRutValidInModule11(19101178, '4'); // ❌ false  
 ```
