@@ -1,6 +1,6 @@
 {
   "name": "@ftapiat/js-rut-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Permite validar, limpiar y formatear RUT chilenos en Javascript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,8 +12,7 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "version": "npm run format && npm i --package-lock-only && git add ."
   },
   "keywords": [
     "rut",
