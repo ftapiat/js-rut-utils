@@ -3,7 +3,7 @@ import { RutIsMalformedError } from '@/errors';
 import { isRutValid } from '@/utils';
 
 test('Constructor "fromString" genera RUT correctamente', () => {
-  const rutList = ['10.407.355-7', '10407355-7', '104073557']
+  const rutList = ['10.407.355-7', '10407355-7', '104073557'];
   for (let string of rutList) {
     const rut = RutModel.fromString(string);
     expect(rut.number).toBe(10_407_355);
@@ -13,7 +13,7 @@ test('Constructor "fromString" genera RUT correctamente', () => {
 
 test('Constructor "fromNumber" genera DV correcto', () => {
   const rut = RutModel.fromNumber(10_407_355);
-  expect(rut.dv).toBe('7')
+  expect(rut.dv).toBe('7');
 });
 
 test('Constructor "random" crea RUT aleatorio válido', () => {
@@ -23,12 +23,12 @@ test('Constructor "random" crea RUT aleatorio válido', () => {
 
 test('Propiedad "formatted" entrega el RUT formateado', () => {
   const rut = new RutModel(10_407_355, '7');
-  expect(rut.formatted).toBe('10.407.355-7')
+  expect(rut.formatted).toBe('10.407.355-7');
 });
 
 test('Propiedad "cleaned" entrega el RUT y su DV sin puntos ni guión', () => {
   const rut = new RutModel(10_407_355, '7');
-  expect(rut.cleaned).toBe('104073557')
+  expect(rut.cleaned).toBe('104073557');
 });
 
 test('RUT malformado arroja error', () => {
